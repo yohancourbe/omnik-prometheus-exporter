@@ -1,0 +1,15 @@
+## General
+
+## Linux
+.*
+!.gitignore
+*~
+
+## Python
+*.py[cod]
+
+
+## App specific
+config.cfg
+omnik-export.log
+Development/sim-config.cfg
