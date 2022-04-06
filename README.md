@@ -21,3 +21,34 @@ docker run -d \
   --name omnik-exporter \
   omnik-exporter:latest
 ```
+
+Configure scaping job in Prometheus
+
+```
+- job_name: omnik
+  honor_timestamps: true
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  metrics_path: /metrics
+  scheme: http
+  follow_redirects: true
+  static_configs:
+  - targets:
+    - omnik-exporter:8080
+```
+
+NB: in order to DNS to work, both prometheus and omnik-exporter must be on the same user-defined network.
+
+```
+docker network create home-monitoring
+```
+
+And your container must be created with the network specified
+
+```
+docker run -d \
+  --volume ${PWD}/config-org.cfg:/home/app/config.cfg \
+  --name omnik-exporter \
+  --network home-network \
+  omnik-exporter:latest
+```
