@@ -1,12 +1,12 @@
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-import OmnikExport
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from OmnikExport import OmnikExport
 
 hostName = "0.0.0.0"
 serverPort = 8080
 
 
 class PrometheusExporterWebserver(BaseHTTPRequestHandler):
-    omnik_exporter = OmnikExport.OmnikExport('config.cfg')
+    omnik_exporter = OmnikExport('config.cfg')
 
     def do_GET(self):
         data = self.omnik_exporter.run()
@@ -14,11 +14,11 @@ class PrometheusExporterWebserver(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write(data)
+        self.wfile.write(data.encode())
 
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), PrometheusExporterWebserver)
-    print("Server started http://%s:%s" %
-          (hostName, serverPort))  # Server starts
+    print(f"Server started http://{hostName}:{serverPort}")  # Server starts
     webServer.serve_forever()
+

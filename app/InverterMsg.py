@@ -1,9 +1,8 @@
 import struct  # Converting bytes to numbers
 
 
-class InverterMsg(object):
+class InverterMsg:
     """Decode the response message from an omniksol inverter."""
-    raw_msg = ""
 
     def __init__(self, msg, offset=0):
         self.raw_msg = msg
@@ -19,7 +18,7 @@ class InverterMsg(object):
         Returns:
             str: String in the message from start to end
         """
-        return self.raw_msg[begin:end]
+        return self.raw_msg[begin:end].decode('utf-8')
 
     def __get_short(self, begin, divider=10):
         """Extract short from message.
@@ -70,7 +69,7 @@ class InverterMsg(object):
     @property
     def power(self):
         """Power output"""
-        print self.__get_short(59)
+        print(self.__get_short(59))
 
     @property
     def e_total(self):
@@ -189,3 +188,4 @@ class InverterMsg(object):
     def h_total(self):
         """Hours the inverter generated electricity"""
         return int(self.__get_long(75, 1))  # Don't divide
+
