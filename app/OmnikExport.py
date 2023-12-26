@@ -12,7 +12,8 @@ import configparser
 import os
 import time
 from InverterMsg import InverterMsg  # Import the Msg handler
-
+import codecs
+import re
 
 class OmnikExport:
     """
@@ -158,14 +159,21 @@ class OmnikExport:
             bytes: Information request string for inverter
         """
         response = b'\x68\x02\x40\x30'
-        
+
         double_hex = hex(serial_no)[2:] * 2
-        hex_list = [format(int(double_hex[i:i + 2], 16), '02x').encode('ascii') for i in
+
+        # changed for python3
+        hex_list = [codecs.decode(double_hex[i:i + 2], 'hex') for i in
                     reversed(range(0, len(double_hex), 2))]
-        
-        cs_count = 115 + sum([int(c, 16) for c in hex_list])
-        checksum = format(cs_count, '02x').encode('ascii')
+
+        cs_count = 115 + sum([ord(c) for c in hex_list])
+
+        # changed for python3
+        checksum = codecs.decode(hex(cs_count)[-2:], 'hex')
+
+        # changed for python3
         response += b''.join(hex_list) + b'\x01\x00' + checksum + b'\x16'
+
         return response
 
 
