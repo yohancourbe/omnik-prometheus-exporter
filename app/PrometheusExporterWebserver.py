@@ -14,7 +14,7 @@ class PrometheusExporterWebserver(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write(data)
+        self.wfile.write(data.encode())
 
 
 if __name__ == "__main__":
