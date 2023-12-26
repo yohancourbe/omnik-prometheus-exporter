@@ -157,14 +157,15 @@ class OmnikExport:
         Returns:
             bytes: Information request string for inverter
         """
-        response = '\x68\x02\x40\x30'
-
+        response = b'\x68\x02\x40\x30'
+        
         double_hex = hex(serial_no)[2:] * 2
-        hex_list = [double_hex[i:i + 2].decode('hex') for i in
+        hex_list = [bytes.fromhex(double_hex[i:i + 2]) for i in
                     reversed(range(0, len(double_hex), 2))]
-
-        cs_count = 115 + sum([ord(c) for c in hex_list])
-        checksum = hex(cs_count)[-2:].decode('hex')
-        response += ''.join(hex_list) + '\x01\x00' + checksum + '\x16'
+        
+        cs_count = 115 + sum([int(c, 16) for sublist in hex_list for c in sublist])
+        checksum = format(cs_count, '02x').encode('ascii')
+        response += b''.join(hex_list) + b'\x01\x00' + checksum + b'\x16'
         return response
+
 
