@@ -47,7 +47,7 @@ And your container must be created with the network specified
 
 ```
 docker run -d \
-  --volume ${PWD}/config-org.cfg:/home/app/config.cfg \
+  --volume ${PWD}/config-org.cfg:/usr/src/app/config.cfg \
   --name omnik-exporter \
   --network home-network \
   omnik-exporter:latest
