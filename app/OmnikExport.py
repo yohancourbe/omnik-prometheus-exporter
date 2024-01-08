@@ -69,7 +69,7 @@ class OmnikExport:
 
         logs += "e_today_kwh{device=\"%s\"} %.2f\n" % (msg.id, msg.e_today)
         logs += "e_total_kwh{device=\"%s\"} %.2f\n" % (msg.id, msg.e_total)
-        logs += "h_total_degrees{device=\"%s\"} %.2f\n" % (msg.id, msg.h_total / 1000, timestamp)
+        logs += "h_total_degrees{device=\"%s\"} %.2f\n" % (msg.id, msg.h_total / 1000)
 
         for i in range(1, 4):
             logs += "pv_voltage_volts{device=\"%s\", pv=\"%d\"} %.2f\n" % (msg.id, i, msg.v_pv(i))
