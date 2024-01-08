@@ -67,28 +67,19 @@ class OmnikExport:
 
         logs = ""
 
-        logs += "e_today_kwh{device=\"%s\"} %.2f %d\n" % (
-            msg.id, msg.e_today, timestamp)
-        logs += "e_total_kwh{device=\"%s\"} %.2f %d\n" % (
-            msg.id, msg.e_total, timestamp)
-        logs += "h_total_degrees{device=\"%s\"} %.2f %d\n" % (
-            msg.id, msg.h_total / 1000, timestamp)
+        logs += "e_today_kwh{device=\"%s\"} %.2f\n" % (msg.id, msg.e_today)
+        logs += "e_total_kwh{device=\"%s\"} %.2f\n" % (msg.id, msg.e_total)
+        logs += "h_total_degrees{device=\"%s\"} %.2f\n" % (msg.id, msg.h_total / 1000, timestamp)
 
         for i in range(1, 4):
-            logs += "pv_voltage_volts{device=\"%s\", pv=\"%d\"} %.2f %d\n" % (
-                msg.id, i, msg.v_pv(i), timestamp)
-            logs += "pv_current_amps{device=\"%s\", pv=\"%d\"} %.2f %d\n" % (
-                msg.id, i, msg.i_pv(i), timestamp)
+            logs += "pv_voltage_volts{device=\"%s\", pv=\"%d\"} %.2f\n" % (msg.id, i, msg.v_pv(i))
+            logs += "pv_current_amps{device=\"%s\", pv=\"%d\"} %.2f\n" % (msg.id, i, msg.i_pv(i))
 
         for i in range(1, 4):
-            logs += "ac_voltage_volts{device=\"%s\", line=\"%d\"} %.2f %d\n" % (
-                msg.id, i, msg.v_ac(i), timestamp)
-            logs += "ac_current_amps{device=\"%s\", line=\"%d\"} %.2f %d\n" % (
-                msg.id, i, msg.i_ac(i), timestamp)
-            logs += "ac_power_watts{device=\"%s\", line=\"%d\"} %.2f %d\n" % (
-                msg.id, i, msg.p_ac(i), timestamp)
-            logs += "ac_frequency_hertz{device=\"%s\", line=\"%d\"} %.2f %d\n" % (
-                msg.id, i, msg.f_ac(i), timestamp)
+            logs += "ac_voltage_volts{device=\"%s\", line=\"%d\"} %.2f\n" % (msg.id, i, msg.v_ac(i))
+            logs += "ac_current_amps{device=\"%s\", line=\"%d\"} %.2f\n" % (msg.id, i, msg.i_ac(i))
+            logs += "ac_power_watts{device=\"%s\", line=\"%d\"} %.2f\n" % (msg.id, i, msg.p_ac(i))
+            logs += "ac_frequency_hertz{device=\"%s\", line=\"%d\"} %.2f\n" % (msg.id, i, msg.f_ac(i))
 
         return logs
 
