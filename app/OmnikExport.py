@@ -8,7 +8,6 @@ import socket  # Needed for talking to inverter
 import sys
 import logging
 import logging.config
-import configparser
 import os
 import time
 from InverterMsg import InverterMsg  # Import the Msg handler
@@ -21,24 +20,18 @@ class OmnikExport:
     format/location.
     """
 
-    config = None
     logger = None
 
-    def __init__(self, config_file):
-        # Load the setting
-        config_files = [self.__expand_path('config-default.cfg'),
-                        self.__expand_path(config_file)]
-
-        self.config = configparser.RawConfigParser()
-        self.config.read(config_files)
+    def __init__(self):
+        pass
 
     def run(self):
         """Get information from inverter and store is configured outputs."""
-        self.build_logger(self.config)
+        self.build_logger()
 
         # Connect to inverter
-        ip = self.config.get('inverter', 'ip')
-        port = self.config.get('inverter', 'port')
+        ip = os.getenv('INVERTER_IP')
+        port = os.getenv('INVERTER_PORT')
 
         for res in socket.getaddrinfo(ip, port, socket.AF_INET,
                                       socket.SOCK_STREAM):
@@ -53,7 +46,7 @@ class OmnikExport:
                 self.logger.error(msg)
                 sys.exit(1)
 
-        wifi_serial = self.config.getint('inverter', 'wifi_sn')
+        wifi_serial = int(os.getenv('INVERTER_WIFI_SN'))
         inverter_socket.sendall(OmnikExport.generate_string(wifi_serial))
         data = inverter_socket.recv(1024)
         inverter_socket.close()
@@ -83,13 +76,10 @@ class OmnikExport:
 
         return logs
 
-    def build_logger(self, config):
+    def build_logger(self):
         # Build logger
         """
         Build logger for this program
-
-        Args:
-            config: configparser with settings from file
         """
         log_levels = dict(debug=10, info=20, warning=30, error=40, critical=50)
         log_dict = {
@@ -116,23 +106,7 @@ class OmnikExport:
 
     def override_config(self, section, option, value):
         """Override config settings"""
-        self.config.set(section, option, value)
-
-    @staticmethod
-    def __expand_path(path):
-        """
-        Expand relative path to absolute path.
-
-        Args:
-            path: file path
-
-        Returns: absolute path to file
-
-        """
-        if os.path.isabs(path):
-            return path
-        else:
-            return os.path.dirname(os.path.abspath(__file__)) + "/" + path
+        os.environ[option] = value
 
     @staticmethod
     def generate_string(serial_no):
@@ -166,6 +140,3 @@ class OmnikExport:
         response += b''.join(hex_list) + b'\x01\x00' + checksum + b'\x16'
 
         return response
-
-
-

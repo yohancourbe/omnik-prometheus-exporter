@@ -6,7 +6,7 @@ serverPort = 8080
 
 
 class PrometheusExporterWebserver(BaseHTTPRequestHandler):
-    omnik_exporter = OmnikExport('config.cfg')
+    omnik_exporter = OmnikExport()
 
     def do_GET(self):
         data = self.omnik_exporter.run()
@@ -21,4 +21,3 @@ if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), PrometheusExporterWebserver)
     print(f"Server started http://{hostName}:{serverPort}")  # Server starts
     webServer.serve_forever()
-
