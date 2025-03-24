@@ -13,16 +13,22 @@ docker build -t omnik-exporter:latest .
 
 # Usage
 
-Edit config-org.conf to match your settings.
+Set the following environment variables to match your settings:
+
+- `INVERTER_IP`: IP address of your Omnik inverter
+- `INVERTER_PORT`: Port of your Omnik inverter (default: 8899)
+- `INVERTER_WIFI_SN`: S/N of the wifi kit
 
 ```
 docker run -d \
-  --volume ${PWD}/config-org.cfg:/home/app/config.cfg \
+  --env INVERTER_IP=192.168.1.198 \
+  --env INVERTER_PORT=8899 \
+  --env INVERTER_WIFI_SN=632165821 \
   --name omnik-exporter \
   omnik-exporter:latest
 ```
 
-Configure scaping job in Prometheus
+Configure scraping job in Prometheus
 
 ```
 - job_name: omnik
@@ -47,7 +53,9 @@ And your container must be created with the network specified
 
 ```
 docker run -d \
-  --volume ${PWD}/config-org.cfg:/usr/src/app/config.cfg \
+  --env INVERTER_IP=192.168.1.198 \
+  --env INVERTER_PORT=8899 \
+  --env INVERTER_WIFI_SN=632165821 \
   --name omnik-exporter \
   --network home-network \
   omnik-exporter:latest
