@@ -44,7 +44,7 @@ class OmnikExport:
             except socket.error as msg:
                 self.logger.error('Could not open socket')
                 self.logger.error(msg)
-                sys.exit(1)
+                raise RuntimeError(f"Could not connect to inverter: {msg}")
 
         wifi_serial = int(os.getenv('INVERTER_WIFI_SN'))
         inverter_socket.sendall(OmnikExport.generate_string(wifi_serial))
